@@ -3,6 +3,14 @@
 #include <GL/glew.h>
 #include <vector>
 
+extern enum Task {
+    Task2 = 2,
+	Task3 = 3,
+	Task4 = 4
+};
+
+extern Task currentAssignment;
+
 // это нужно для хранения программ шейдеров
 extern GLuint ProgramQuad, ProgramFan, ProgramPentagon;
 

@@ -16,6 +16,17 @@ int main() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) { window.close(); }
 			else if (event.type == sf::Event::Resized) { glViewport(0, 0, event.size.width, event.size.height); }
+			else if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Num2) {
+					currentAssignment = Task2;
+				}
+				else if (event.key.code == sf::Keyboard::Num3) {
+					currentAssignment = Task3;
+				}
+				else if (event.key.code == sf::Keyboard::Num4) {
+					currentAssignment = Task4;
+				}
+			}
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Draw();

@@ -5,6 +5,8 @@
 #include <vector>
 #include <cmath>
 
+Task currentAssignment = Task2;
+
 // это нужно для хранения программ шейдеров
 GLuint ProgramQuad, ProgramFan, ProgramPentagon;
 
@@ -136,35 +138,43 @@ void Init() {
 }
 
 void Draw() {
-	// четырёхугольник
-	glUseProgram(ProgramQuad);
-	glEnableVertexAttribArray(Attrib_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOQuad);
-	glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	glDisableVertexAttribArray(Attrib_vertex);
-	glUseProgram(0);
+	if (currentAssignment == Task2) {
+		// четырёхугольник
+		glUseProgram(ProgramQuad);
+		glEnableVertexAttribArray(Attrib_vertex);
+		glBindBuffer(GL_ARRAY_BUFFER, VBOQuad);
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glDisableVertexAttribArray(Attrib_vertex);
+		glUseProgram(0);
 
-	// веер
-	glUseProgram(ProgramFan);
-	glEnableVertexAttribArray(Attrib_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOFan);
-	glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
-	glDisableVertexAttribArray(Attrib_vertex);
-	glUseProgram(0);
+		// веер
+		glUseProgram(ProgramFan);
+		glEnableVertexAttribArray(Attrib_vertex);
+		glBindBuffer(GL_ARRAY_BUFFER, VBOFan);
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+		glDisableVertexAttribArray(Attrib_vertex);
+		glUseProgram(0);
 
-	// пятиугольник
-	glUseProgram(ProgramPentagon);
-	glEnableVertexAttribArray(Attrib_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOPentagon);
-	glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
-	glDisableVertexAttribArray(Attrib_vertex);
-	glUseProgram(0);
+		// пятиугольник
+		glUseProgram(ProgramPentagon);
+		glEnableVertexAttribArray(Attrib_vertex);
+		glBindBuffer(GL_ARRAY_BUFFER, VBOPentagon);
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
+		glDisableVertexAttribArray(Attrib_vertex);
+		glUseProgram(0);
+	}
+	else if (currentAssignment == Task3) {
+		// Добавьте код для задания 3 здесь
+	}
+	else if (currentAssignment == Task4) {
+		// Добавьте код для задания 4 здесь
+	}
 }
 
 void ReleaseVBO() {
