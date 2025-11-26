@@ -94,6 +94,29 @@ void InitShaders() {
     glAttachShader(ProgramQuadUniform, fQuadUniform);
     glLinkProgram(ProgramQuadUniform);
 
+    // Task4 Gradient
+    GLuint vShaderColor = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vShaderColor, 1, &VertexColorShaderSource, NULL);
+    glCompileShader(vShaderColor);
+    GLuint fShaderColor = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fShaderColor, 1, &FragShaderColorSource, NULL);
+    glCompileShader(fShaderColor);
+
+    ProgramQuadGradient = glCreateProgram();
+    glAttachShader(ProgramQuadGradient, vShaderColor);
+    glAttachShader(ProgramQuadGradient, fShaderColor);
+    glLinkProgram(ProgramQuadGradient);
+
+    ProgramFanGradient = glCreateProgram();
+    glAttachShader(ProgramFanGradient, vShaderColor);
+    glAttachShader(ProgramFanGradient, fShaderColor);
+    glLinkProgram(ProgramFanGradient);
+
+    ProgramPentagonGradient = glCreateProgram();
+    glAttachShader(ProgramPentagonGradient, vShaderColor);
+    glAttachShader(ProgramPentagonGradient, fShaderColor);
+    glLinkProgram(ProgramPentagonGradient);
+
     // Task2 Fan
     GLuint fFanShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fFanShader, 1, &FragShaderFanSource, NULL);
@@ -144,6 +167,13 @@ void InitVBO() {
     glBindBuffer(GL_ARRAY_BUFFER, VBOQuad);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
 
+    ColorVertex quadGrad[4] = {
+        {-0.95f,-0.3f,1,0,0,1}, {-0.95f,0.3f,0,1,0,1},
+        {-0.35f,0.3f,0,0,1,1}, {-0.35f,-0.3f,1,1,0,1}
+    };
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientQuad);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadGrad), quadGrad, GL_STATIC_DRAW);
+
     // Fan
     ColorVertex fanGrad[6];
     float cx = 0.0f, cy = 0.0f, r = 0.3f;
@@ -155,6 +185,13 @@ void InitVBO() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientFan);
     glBufferData(GL_ARRAY_BUFFER, sizeof(fanGrad), fanGrad, GL_STATIC_DRAW);
 
+    Vertex fan[6]; fan[0] = { cx,cy };
+    for (int i = 1; i <= 5; i++) {
+        float angle = M_PI * (i - 1) / 4.0f;
+        fan[i] = { cx + r * cos(angle),cy + r * sin(angle) };
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, VBOFan);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(fan), fan, GL_STATIC_DRAW);
 
     // Pentagon
     ColorVertex pentGrad[5];
@@ -165,6 +202,14 @@ void InitVBO() {
     }
     glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientPentagon);
     glBufferData(GL_ARRAY_BUFFER, sizeof(pentGrad), pentGrad, GL_STATIC_DRAW);
+
+    Vertex pent[5];
+    for (int i = 0; i < 5; i++) {
+        float angle = 2 * M_PI * i / 5.0 + M_PI / 2;
+        pent[i] = { px + pr * cos(angle),py + pr * sin(angle) };
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, VBOPentagon);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pent), pent, GL_STATIC_DRAW);
 }
 
 void Init() { InitShaders(); InitVBO(); }
@@ -223,17 +268,56 @@ void Draw() {
         glUseProgram(0);
     }
     else if (currentAssignment == Task4) {
+        // Gradient Quad
+        glUseProgram(ProgramQuadGradient);
+        Attrib_vertex = glGetAttribLocation(ProgramQuadGradient, "coord");
+        Attrib_color = glGetAttribLocation(ProgramQuadGradient, "vertColor");
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientQuad);
+        glEnableVertexAttribArray(Attrib_vertex);
+        glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
+        glEnableVertexAttribArray(Attrib_color);
+        glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(GLfloat)));
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        glDisableVertexAttribArray(Attrib_vertex);
+        glDisableVertexAttribArray(Attrib_color);
 
+        // Gradient Fan
+        glUseProgram(ProgramFanGradient);
+        Attrib_vertex = glGetAttribLocation(ProgramFanGradient, "coord");
+        Attrib_color = glGetAttribLocation(ProgramFanGradient, "vertColor");
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientFan);
+        glEnableVertexAttribArray(Attrib_vertex);
+        glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
+        glEnableVertexAttribArray(Attrib_color);
+        glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(GLfloat)));
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+        glDisableVertexAttribArray(Attrib_vertex);
+        glDisableVertexAttribArray(Attrib_color);
+
+        // Gradient Pentagon
+        glUseProgram(ProgramPentagonGradient);
+        Attrib_vertex = glGetAttribLocation(ProgramPentagonGradient, "coord");
+        Attrib_color = glGetAttribLocation(ProgramPentagonGradient, "vertColor");
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_GradientPentagon);
+        glEnableVertexAttribArray(Attrib_vertex);
+        glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
+        glEnableVertexAttribArray(Attrib_color);
+        glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(GLfloat)));
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
+        glDisableVertexAttribArray(Attrib_vertex);
+        glDisableVertexAttribArray(Attrib_color);
     }
 }
 
 void ReleaseVBO() {
     glDeleteBuffers(1, &VBOQuad); glDeleteBuffers(1, &VBOFan); glDeleteBuffers(1, &VBOPentagon);
+    glDeleteBuffers(1, &VBO_GradientQuad); glDeleteBuffers(1, &VBO_GradientFan); glDeleteBuffers(1, &VBO_GradientPentagon);
 }
 
 void ReleaseShader() {
     glDeleteProgram(ProgramQuad); glDeleteProgram(ProgramFan); glDeleteProgram(ProgramPentagon);
     glDeleteProgram(ProgramQuadUniform); glDeleteProgram(ProgramFanUniform); glDeleteProgram(ProgramPentagonUniform);
+    glDeleteProgram(ProgramQuadGradient); glDeleteProgram(ProgramFanGradient); glDeleteProgram(ProgramPentagonGradient);
 }
 
 void Release() { ReleaseShader(); ReleaseVBO(); }
