@@ -212,7 +212,10 @@ void InitVBO() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(pent), pent, GL_STATIC_DRAW);
 }
 
-void Init() { InitShaders(); InitVBO(); }
+void Init() { 
+    InitShaders(); 
+    InitVBO(); 
+}
 
 void Draw() {
     if (currentAssignment == Task2) {
